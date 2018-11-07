@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CommonBee {
+public class CommonBee : MonoBehaviour {
 
     public double x { get; set; }
     public double y { get; set; }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Collections;
+using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEditor;
@@ -10,13 +11,59 @@ public class UCamera : MonoBehaviour {
     public static bool freeze = false;
     public static bool sfile = false;
 
-    // Use this for initialization
+    private static int index = 0;
+    
     void Start () {
-		
-	}
-
-    // Update is called once per frame
+        Projector.setDefaults();
+    }
+    
     void Update() {
+
+        if (Input.GetKey(KeyCode.K) || Input.GetKey(KeyCode.LeftArrow)) {
+
+            CommonUIButtons.pulseBack();
+            GameObject cobj = null;
+
+            if ((index - 1) < 0) {
+
+                index = Projector.objs.Count - 1;
+                cobj = Projector.objs[index];
+
+                transform.position = cobj.transform.position;
+                return;
+
+            }
+
+            --index;
+            cobj = Projector.objs[index];
+
+            transform.position = cobj.transform.position;
+            return;
+
+        }
+
+        if (Input.GetKey(KeyCode.L) || Input.GetKey(KeyCode.RightArrow)) {
+
+            CommonUIButtons.pulseNext();
+            GameObject cobj;
+
+            if ((index + 1) > (Projector.objs.Count - 1)) {
+
+                index = 0;
+                cobj = Projector.objs[index];
+
+                transform.position = cobj.transform.position;
+                return;
+
+            }
+
+            ++index;
+            cobj = Projector.objs[index];
+
+            transform.position = cobj.transform.position;
+            return;
+
+        }
 
         if (Input.GetKey(KeyCode.H)) {
 
@@ -50,11 +97,18 @@ public class UCamera : MonoBehaviour {
                         Projector.coords.Add(text);
 
                     }
-
+                    
                     Projector.createBees();
                     Projector.createGameObjects();
 
                 }
+
+                Cursor.lockState = CursorLockMode.None;
+
+                StartCoroutine(CommonTask.ExecuteAfterTime(0.1f, () => {
+                    Cursor.lockState = CursorLockMode.Locked;
+                    Cursor.visible = false;
+                }));
 
                 freeze = false;
 

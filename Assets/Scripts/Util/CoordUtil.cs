@@ -60,8 +60,8 @@ public class CoordUtil {
 
     public static double[] getXYZfromLatLonRadians(double latitude, double longitude, double height) {
 
-        double a = 6378137.0;
-        double b = 6356752.3142;
+        double a = 378137.0; //6378137.0;
+        double b = 356752.3142; //6356752.3142;
         double cosLat = Math.Cos(latitude);
         double sinLat = Math.Sin(latitude);
 
@@ -71,7 +71,7 @@ public class CoordUtil {
         double Y = (rSubN + height) * cosLat * Math.Sin(longitude);
         double Z = ((((b * b) / (a * a)) * rSubN) + height) * sinLat;
 
-        return new double[] { X, Y, Z };
+        return new double[] { X, Z, Y };
 
     }
 
@@ -79,9 +79,11 @@ public class CoordUtil {
 
         double[] degrees = getXYZfromLatLonRadians(
                 latitude * DEGREES_TO_RADIANS,
-                longitude * DEGREES_TO_RADIANS,
-                height);
+                height,
+                longitude * DEGREES_TO_RADIANS);
 
+        //print(height);
+        degrees[1] = height;
         return degrees;
 
     }
